@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  pgvector:
+    image: pgvector/pgvector:pg16
+    container_name: pgvector
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgvector-data:/var/lib/postgresql/data
+
+volumes:
+  pgvector-data:

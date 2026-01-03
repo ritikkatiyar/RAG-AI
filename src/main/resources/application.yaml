@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: genai
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/mydatabase
+    username: myuser
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  ai:
+    ollama:
+      base-url: http://localhost:11434
+
+      # 🔹 Chat / answer generation
+      chat:
+        options:
+          model: gemma:2b
+          temperature: 0.2   # IMPORTANT for RAG (low hallucination)
+
+      # 🔹 Embeddings (MUST be an embedding model)
+      embedding:
+        options:
+          model: nomic-embed-text
+
+    # 🔹 Vector store (pgvector)
+    vectorstore:
+      pgvector:
+        table-name: embeddings
+        dimensions: 768
+        initialize-schema: true
