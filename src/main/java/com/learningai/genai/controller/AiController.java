@@ -1,15 +1,14 @@
 package com.learningai.genai.controller;
 
+import com.learningai.genai.service.WeatherService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.converter.ListOutputConverter;
-import org.springframework.ai.image.ImageResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ai.tool.ToolCallback;
 import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,9 +19,11 @@ import java.util.Map;
 public class AiController {
 
     private final ChatClient chatClient;
+    private final ToolCallback weatherTool;
 
-    public AiController(ChatClient chatClient) {
+    public AiController(ChatClient chatClient,ToolCallback weatherTool) {
         this.chatClient = chatClient;
+        this.weatherTool=weatherTool;
     }
 
     @GetMapping("/")
@@ -43,6 +44,17 @@ public class AiController {
             return List.of("Ai service not availble to cater request");
         }
 
+    }
+    @GetMapping("/weather")
+    public String getWeather(@RequestParam(value = "message",
+            defaultValue = "what is the weather of gurugram")String message){
+
+        ChatResponse chatResponse=chatClient
+                .prompt()
+                .user(message)
+                .toolCallbacks(weatherTool)
+                .call().chatResponse();
+        return chatResponse.getResult().getOutput().getText();
     }
 
 }

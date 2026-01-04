@@ -15,7 +15,8 @@ spring:
       # 🔹 Chat / answer generation
       chat:
         options:
-          model: gemma:2b
+#          model: gemma:2b
+          model: llama3.1
           temperature: 0.2   # IMPORTANT for RAG (low hallucination)
 
       # 🔹 Embeddings (MUST be an embedding model)
@@ -29,3 +30,8 @@ spring:
         table-name: embeddings
         dimensions: 768
         initialize-schema: true
+
+  logging:
+    level:
+      org.springframework.ai: DEBUG
+
